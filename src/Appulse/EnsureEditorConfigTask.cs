@@ -20,7 +20,7 @@ namespace Codestellation.Appulse
                 return false;
             }
 
-            if (!TryLoadLocalEditorConfig(out string localContent))
+            if (!TryLoadLocalEditorConfig(out string localContent, out string localLocation))
             {
                 return false;
             }
@@ -36,7 +36,7 @@ namespace Codestellation.Appulse
                 return true;
             }
 
-            Log.LogError("Reference .editorconfig differs from local .editorconfig");
+            Log.LogError($"Reference .editorconfig differs from the local. Update '{localLocation}' from '{ReferenceEditorConfig}')");
             return false;
         }
 
@@ -65,7 +65,7 @@ namespace Codestellation.Appulse
         }
 
 
-        private bool TryLoadLocalEditorConfig(out string localContent)
+        private bool TryLoadLocalEditorConfig(out string localContent, out string location)
         {
             var current = new DirectoryInfo(SolutionDir);
             var searchedPathes = new List<string>();
@@ -75,6 +75,7 @@ namespace Codestellation.Appulse
                 if (editorConfigPath != null)
                 {
                     localContent = Normalize(File.ReadAllText(editorConfigPath.FullName));
+                    location = editorConfigPath.FullName;
                     return true;
                 }
 
@@ -84,6 +85,7 @@ namespace Codestellation.Appulse
 
             Log.LogError($"Cannot find .editorconfig. Search path are '{string.Join(", ", searchedPathes)}");
             localContent = null;
+            location = null;
             return false;
         }
 

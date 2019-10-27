@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using Microsoft.Build.Utilities;
 
@@ -65,27 +67,22 @@ namespace Codestellation.Appulse
 
         private bool TryLoadLocalEditorConfig(out string localContent)
         {
-            var solutionDirInfo = new DirectoryInfo(SolutionDir);
-
-
-            string path1 = Path.Combine(solutionDirInfo.FullName, ".editorconfig");
-
-            if (File.Exists(path1))
+            var current = new DirectoryInfo(SolutionDir);
+            var searchedPathes = new List<string>();
+            do
             {
-                Log.LogMessage($"Found local .editorconfig at '{path1}'");
-                localContent = Normalize(File.ReadAllText(path1));
-                return true;
-            }
+                FileInfo editorConfigPath = current.EnumerateFiles(".editorconfig").FirstOrDefault();
+                if (editorConfigPath != null)
+                {
+                    localContent = Normalize(File.ReadAllText(editorConfigPath.FullName));
+                    return true;
+                }
 
-            string path2 = Path.Combine(solutionDirInfo.Parent.FullName, ".editorconfig");
-            if (File.Exists(path2))
-            {
-                Log.LogMessage($"Found local .editorconfig at '{path2}'");
-                localContent = Normalize(File.ReadAllText(path2));
-                return true;
-            }
+                searchedPathes.Add(current.FullName);
+                current = current.Parent;
+            } while (current != null && Path.IsPathRooted(current.FullName) || current.EnumerateDirectories(".git").Any());
 
-            Log.LogError($"Cannot find .editorconfig. Search path are '{path1}', '{path2}'");
+            Log.LogError($"Cannot find .editorconfig. Search path are '{string.Join(", ", searchedPathes)}");
             localContent = null;
             return false;
         }

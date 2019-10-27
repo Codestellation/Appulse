@@ -38,7 +38,8 @@ namespace Codestellation.Appulse
 
             string details = CompareDetailed(localContent, referenceContent);
 
-            Log.LogError($"Reference .editorconfig differs from the local. {details} Update '{localLocation}' from '{ReferenceEditorConfig}')");
+            Log.LogError($"Reference .editorconfig differs from the local. {details}. " +
+                         $"Update '{localLocation}' from '{ReferenceEditorConfig}')");
             return false;
         }
 
@@ -49,7 +50,7 @@ namespace Codestellation.Appulse
 
             if (localLines.Length != referenceLines.Length)
             {
-                return $"Local has {localLines.Length} lines reference has {referenceLines.Length}";
+                return $"Local has {localLines.Length} lines reference has {referenceLines.Length} lines";
             }
 
 

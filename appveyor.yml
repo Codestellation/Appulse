@@ -15,5 +15,5 @@ artifacts:
 # publish artifacts config
 deploy:
   - provider: NuGet
-    api_key: 
-      secure: j8FJm6D/lMnLTBJeRwa08RNDi1cZs+junq4tZsN4vDGTtkmncomdltTbhB86IpoD
+    api_key:
+      secure: GkmEdaMfjFIaqYGW8+58yA8DAprXCBkKgWwAhrDEf+je0agDSJu+HTGnirIypBeC

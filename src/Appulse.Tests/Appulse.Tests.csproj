@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net46</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.2;net461</TargetFrameworks>
     <AssemblyName>Codestellation.Appulse.Tests</AssemblyName>
     <RootNamespace>Codestellation.Appulse.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -22,4 +22,20 @@
   <ItemGroup>
     <ProjectReference Include="..\Appulse\Appulse.csproj" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.2'">
+    <PackageReference Include="Microsoft.AspNetCore.All">
+      <Version>2.2.7</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup  Condition="'$(TargetFramework)' == 'net461'">
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.CookiePolicy" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+  </ItemGroup>
+
+
 </Project>

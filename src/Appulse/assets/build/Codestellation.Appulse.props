@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <GitSemVersionTaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.0</GitSemVersionTaskFolder>
+    <GitSemVersionTaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net46</GitSemVersionTaskFolder>
+    <GitSemVersionTaskAssembly>$(GitSemVersionTaskFolder)\Codestellation.Appulse.dll</GitSemVersionTaskAssembly>
+  </PropertyGroup>
+
+  <UsingTask 
+      TaskName="Codestellation.Appulse.GitSemVersionTask"
+      AssemblyFile="$(GitSemVersionTaskAssembly)" />
+</Project>

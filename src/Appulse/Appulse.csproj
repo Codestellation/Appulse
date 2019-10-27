@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+    <Authors>Codestellation Team</Authors>
+    <Company>Codestellation</Company>
+    <Description>Versioning tools</Description>
+    <Copyright>Copyright (c) Codestellation 2018</Copyright>
+    <PackageId>Codestellation.Appulse</PackageId>
+    <PackageProjectUrl>https://github.com/codestellation/appulse</PackageProjectUrl>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <RepositoryUrl>https://github.com/codestellation/appulse</RepositoryUrl>
+    <AssemblyName>Codestellation.Appulse</AssemblyName>
+    <RootNamespace>Codestellation.Appulse</RootNamespace>
+    <NoWarn>7035</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputPath Condition="$(OutputPath) == ''">..\..\build\bin</OutputPath>
+    <OutDir>$(OutputPath)\$(MSBuildProjectName)\$(TargetFramework)\</OutDir>
+    <BuildOutputTargetFolder>build</BuildOutputTargetFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="assets\**" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+  <!--
+      Pro-tip: set PrivateAssets="All" on the PackageReferences. 
+      Otherwise, these will be added to your package’s list of dependencies. 
+      These packages are not required when your task is installed; they are only used when you compile your project. (https://www.natemcmaster.com/blog/2017/07/05/msbuild-task-in-nuget/)
+    -->
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.85" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.85" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

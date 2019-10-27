@@ -1,0 +1,14 @@
+<Project>
+    <PropertyGroup>
+        <GetPackageVersionDependsOn>
+            GitSemVersion;
+            $(GetPackageVersionDependsOn)
+        </GetPackageVersionDependsOn>
+    </PropertyGroup>
+
+    <Target
+        Name="EnsureEditorConfig"
+        BeforeTargets="Compile">
+      <EnsureEditorConfigTask/>
+    </Target>
+</Project>

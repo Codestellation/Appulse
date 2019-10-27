@@ -1,0 +1,19 @@
+image: Visual Studio 2017
+configuration: Release
+branches:
+  only:
+    - master
+
+# build config
+build_script:
+  - .\build.sh
+
+# artifacts config
+artifacts:
+  - path: '.\build\bin\*.nupkg'
+
+# publish artifacts config
+deploy:
+  - provider: NuGet
+    api_key: 
+      secure: j8FJm6D/lMnLTBJeRwa08RNDi1cZs+junq4tZsN4vDGTtkmncomdltTbhB86IpoD

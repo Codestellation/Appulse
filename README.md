@@ -21,17 +21,17 @@ After completing install make sure your project contains such lines:
 Location is set using a msbuild propery `ReferenceEditorConfig`
 It can point to a file
 ```xml
-<ItemGroup>
-    <PropertyGroup>file://somewhere/in/filesystem/.editorconfig</PropertyGroup>
-</ItemGroup>
+<PropertyGroup>
+    <ReferenceEditorConfig>file://somewhere/in/filesystem/.editorconfig</ReferenceEditorConfig>
+</PropertyGroup>
 ```
 
 or to to a file available throught http/https
 
 ```xml
-<ItemGroup>
-    <PropertyGroup>https://raw.githubusercontent.com/Codestellation/Standards/master/.editorconfig</PropertyGroup>
-</ItemGroup>
+<PropertyGroup>
+    <ReferenceEditorConfig>https://raw.githubusercontent.com/Codestellation/Standards/master/.editorconfig</ReferenceEditorConfig>
+</PropertyGroup>
 ```
 
 If files have differences build will fail and error message will contains instruction how to fix it.

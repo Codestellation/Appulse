@@ -65,7 +65,10 @@ namespace Codestellation.Appulse
 
         private bool TryLoadLocalEditorConfig(out string localContent)
         {
-            string path1 = Path.Combine(SolutionDir, ".editorconfig");
+            var solutionDirInfo = new DirectoryInfo(SolutionDir);
+
+
+            string path1 = Path.Combine(solutionDirInfo.FullName, ".editorconfig");
 
             if (File.Exists(path1))
             {
@@ -74,7 +77,7 @@ namespace Codestellation.Appulse
                 return true;
             }
 
-            string path2 = Path.Combine(Directory.GetParent(SolutionDir).FullName, ".editorconfig");
+            string path2 = Path.Combine(solutionDirInfo.Parent.FullName, ".editorconfig");
             if (File.Exists(path2))
             {
                 Log.LogMessage($"Found local .editorconfig at '{path2}'");

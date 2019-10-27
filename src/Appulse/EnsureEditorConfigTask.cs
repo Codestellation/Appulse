@@ -36,8 +36,36 @@ namespace Codestellation.Appulse
                 return true;
             }
 
-            Log.LogError($"Reference .editorconfig differs from the local. Update '{localLocation}' from '{ReferenceEditorConfig}')");
+            string details = CompareDetaile(localContent, referenceContent);
+
+            Log.LogError($"Reference .editorconfig differs from the local. {details} Update '{localLocation}' from '{ReferenceEditorConfig}')");
             return false;
+        }
+
+        private string CompareDetaile(string localContent, string referenceContent)
+        {
+            string[] localLines = localContent.Split('\n');
+            string[] referenceLines = referenceContent.Split('\n');
+
+            if (localLines.Length != referenceLines.Length)
+            {
+                return $"Local has {localLines.Length} lines reference has {referenceLines.Length}";
+            }
+
+
+            for (var lineIndex = 0; lineIndex < localLines.Length; lineIndex++)
+            {
+                string local = localLines[lineIndex];
+                string reference = referenceLines[lineIndex];
+                if (string.Equals(local, reference, StringComparison.Ordinal))
+                {
+                    continue;
+                }
+
+                return $"Difference at line {lineIndex +1}. Local is '{local}' reference is '{reference}'";
+            }
+
+            throw new InvalidOperationException("This should never happen");
         }
 
         private bool TryLoadReferenceEditorConfig(out string referenceContent)

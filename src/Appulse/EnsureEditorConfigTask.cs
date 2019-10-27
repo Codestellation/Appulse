@@ -100,7 +100,8 @@ namespace Codestellation.Appulse
             if (string.IsNullOrWhiteSpace(ReferenceEditorConfig))
             {
                 Log.LogError($"{nameof(ReferenceEditorConfig)} is not set. " +
-                             $"Please set property {nameof(ReferenceEditorConfig)} to point to a file or web link with the source .editorconfig file. Supported ");
+                             $"Please set property {nameof(ReferenceEditorConfig)} to point to a file or web link with the source .editorconfig file. " +
+                             "Supported schemes are file:// and http://");
                 return false;
             }
 

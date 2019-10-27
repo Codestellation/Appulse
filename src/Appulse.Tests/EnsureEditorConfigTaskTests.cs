@@ -51,6 +51,29 @@ namespace Codestellation.Appulse.Tests
         }
 
         [Test]
+        public void Should_return_true_if_local_editor_config_matches_reference_config_in_a_parent_folder_file()
+        {
+            string parentPath = new FileInfo(_localEditorConfig).Directory.Parent.FullName;
+            string destFileName = Path.Combine(parentPath, ".editorconfig");
+            if (File.Exists(destFileName))
+            {
+                File.Delete(destFileName);
+            }
+
+            File.Move(_localEditorConfig, destFileName);
+
+
+            var task = new EnsureEditorConfigTask
+            {
+                BuildEngine = _engine,
+                ReferenceEditorConfig = new Uri(_sameEditorConfig).AbsoluteUri,
+                SolutionDir = Directory.GetCurrentDirectory()
+            };
+
+            Assert.That(task.Execute(), Is.True);
+        }
+
+        [Test]
         public void Should_return_false_if_local_editor_config_differs()
         {
             var task = new EnsureEditorConfigTask

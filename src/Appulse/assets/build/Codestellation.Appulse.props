@@ -1,11 +1,11 @@
 <Project>
   <PropertyGroup>
-    <GitSemVersionTaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.0</GitSemVersionTaskFolder>
-    <GitSemVersionTaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net46</GitSemVersionTaskFolder>
-    <GitSemVersionTaskAssembly>$(GitSemVersionTaskFolder)\Codestellation.Appulse.dll</GitSemVersionTaskAssembly>
+    <EnsureEditorConfigTaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.0</EnsureEditorConfigTaskFolder>
+    <EnsureEditorConfigTaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net46</EnsureEditorConfigTaskFolder>
+    <EnsureEditorConfigTaskAssembly>$(GitSemVersionTaskFolder)\Codestellation.Appulse.dll</EnsureEditorConfigTaskAssembly>
   </PropertyGroup>
 
   <UsingTask 
-      TaskName="Codestellation.Appulse.GitSemVersionTask"
-      AssemblyFile="$(GitSemVersionTaskAssembly)" />
+      TaskName="Codestellation.Appulse.EnsureEditorConfigTask"
+      AssemblyFile="$(EnsureEditorConfigTaskAssembly)" />
 </Project>

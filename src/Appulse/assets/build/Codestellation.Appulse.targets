@@ -1,9 +1,6 @@
 <Project>
     <PropertyGroup>
-        <GetPackageVersionDependsOn>
-            GitSemVersion;
-            $(GetPackageVersionDependsOn)
-        </GetPackageVersionDependsOn>
+        <CompileDependsOn>EnsureEditorConfig;$(CompileDependsOn)</CompileDependsOn>
     </PropertyGroup>
 
     <Target

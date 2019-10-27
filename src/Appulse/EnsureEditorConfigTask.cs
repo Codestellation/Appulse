@@ -47,7 +47,7 @@ namespace Codestellation.Appulse
                 WebRequest request = WebRequest.CreateDefault(uri);
                 using (var streamReader = new StreamReader(request.GetResponse().GetResponseStream()))
                 {
-                    referenceContent = streamReader.ReadToEnd();
+                    referenceContent = Normalize(streamReader.ReadToEnd());
                 }
 
                 Log.LogMessage($"Reference .editorconfig was loaded successfully from '{uri}'");
@@ -62,29 +62,32 @@ namespace Codestellation.Appulse
             }
         }
 
+
         private bool TryLoadLocalEditorConfig(out string localContent)
         {
             string path1 = Path.Combine(SolutionDir, ".editorconfig");
 
             if (File.Exists(path1))
             {
-                Log.LogMessage($"Found local editor config at '{path1}'");
-                localContent = File.ReadAllText(path1);
+                Log.LogMessage($"Found local .editorconfig at '{path1}'");
+                localContent = Normalize(File.ReadAllText(path1));
                 return true;
             }
 
             string path2 = Path.Combine(Directory.GetParent(SolutionDir).FullName, ".editorconfig");
             if (File.Exists(path2))
             {
-                Log.LogMessage($"Found local editor config at '{path2}'");
-                localContent = File.ReadAllText(path2);
+                Log.LogMessage($"Found local .editorconfig at '{path2}'");
+                localContent = Normalize(File.ReadAllText(path2));
                 return true;
             }
 
-            Log.LogError($"Cannot find editor config. Search path are '{path1}', '{path2}'");
+            Log.LogError($"Cannot find .editorconfig. Search path are '{path1}', '{path2}'");
             localContent = null;
             return false;
         }
+
+        private static string Normalize(string source) => source.Replace("\r", string.Empty);
 
         private bool VaildateInpute()
         {
@@ -97,7 +100,7 @@ namespace Codestellation.Appulse
             if (string.IsNullOrWhiteSpace(ReferenceEditorConfig))
             {
                 Log.LogError($"{nameof(ReferenceEditorConfig)} is not set. " +
-                             $"Please set property {nameof(ReferenceEditorConfig)} to point to a file or web link with the source editor config file. Supported ");
+                             $"Please set property {nameof(ReferenceEditorConfig)} to point to a file or web link with the source .editorconfig file. Supported ");
                 return false;
             }
 

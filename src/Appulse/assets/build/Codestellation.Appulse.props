@@ -2,7 +2,7 @@
   <PropertyGroup>
     <EnsureEditorConfigTaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.0</EnsureEditorConfigTaskFolder>
     <EnsureEditorConfigTaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net46</EnsureEditorConfigTaskFolder>
-    <EnsureEditorConfigTaskAssembly>$(GitSemVersionTaskFolder)\Codestellation.Appulse.dll</EnsureEditorConfigTaskAssembly>
+    <EnsureEditorConfigTaskAssembly>$(EnsureEditorConfigTaskFolder)\Codestellation.Appulse.dll</EnsureEditorConfigTaskAssembly>
   </PropertyGroup>
 
   <UsingTask 

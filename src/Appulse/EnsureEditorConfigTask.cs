@@ -62,7 +62,7 @@ namespace Codestellation.Appulse
                     continue;
                 }
 
-                return $"Difference at line {lineIndex +1}. Local is '{local}' reference is '{reference}'";
+                return $"Difference at line {lineIndex + 1}. Local is '{local}' reference is '{reference}'";
             }
 
             throw new InvalidOperationException("This should never happen");
@@ -95,7 +95,7 @@ namespace Codestellation.Appulse
 
         private bool TryLoadLocalEditorConfig(out string localContent, out string location)
         {
-            var current = new DirectoryInfo(SolutionDir);
+            var current = new DirectoryInfo(Patch(SolutionDir));
             var searchedPathes = new List<string>();
             do
             {
@@ -116,6 +116,11 @@ namespace Codestellation.Appulse
             location = null;
             return false;
         }
+
+        private string Patch(string solutionDir)
+            // if msbuild runs build of a csproj (not an sln) solution dir ends with *Undefined*.
+            // Remove it to avoid failing during local .editorconfig probing. 
+            => solutionDir.Replace("*Undefined*", string.Empty);
 
         private static string Normalize(string source) => source.Replace("\r", string.Empty);
 

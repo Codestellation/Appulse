@@ -7,6 +7,7 @@
     <Copyright>Copyright (c) Codestellation 2018</Copyright>
     <PackageId>Codestellation.Appulse</PackageId>
     <PackageProjectUrl>https://github.com/codestellation/appulse</PackageProjectUrl>
+
     <DevelopmentDependency>true</DevelopmentDependency>
     <RepositoryUrl>https://github.com/codestellation/appulse</RepositoryUrl>
     <AssemblyName>Codestellation.Appulse</AssemblyName>
@@ -20,8 +21,15 @@
     <BuildOutputTargetFolder>build</BuildOutputTargetFolder>
   </PropertyGroup>
 
+   <!--https://github.com/NuGet/Home/wiki/Packaging-Icon,-License-and-Documentation-within-the-nupkg
+     https://github.com/NuGet/Home/wiki/Packaging-Documentation-within-the-nupkg-->
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Include="assets\**" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   <ItemGroup>

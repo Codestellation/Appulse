@@ -44,7 +44,7 @@ namespace Codestellation.Appulse.Tests
             {
                 BuildEngine = _engine,
                 ReferenceEditorConfig = new Uri(_sameEditorConfig).AbsoluteUri,
-                SolutionDir = Directory.GetCurrentDirectory()
+                ProjectDir = Directory.GetCurrentDirectory()
             };
 
             Assert.That(task.Execute(), Is.True);
@@ -67,7 +67,7 @@ namespace Codestellation.Appulse.Tests
             {
                 BuildEngine = _engine,
                 ReferenceEditorConfig = new Uri(_sameEditorConfig).AbsoluteUri,
-                SolutionDir = Directory.GetCurrentDirectory()
+                ProjectDir = Directory.GetCurrentDirectory()
             };
 
             Assert.That(task.Execute(), Is.True);
@@ -80,7 +80,7 @@ namespace Codestellation.Appulse.Tests
             {
                 BuildEngine = _engine,
                 ReferenceEditorConfig = new Uri(_differentEditorConfig).AbsoluteUri,
-                SolutionDir = Directory.GetCurrentDirectory()
+                ProjectDir = Directory.GetCurrentDirectory()
             };
 
             Assert.That(task.Execute(), Is.False);
@@ -96,7 +96,7 @@ namespace Codestellation.Appulse.Tests
                 {
                     BuildEngine = _engine,
                     ReferenceEditorConfig = new Uri($"http://localhost:{Resources.Port}").ToString(),
-                    SolutionDir = Directory.GetCurrentDirectory()
+                    ProjectDir = Directory.GetCurrentDirectory()
                 };
 
                 Assert.That(task.Execute(), Is.True);

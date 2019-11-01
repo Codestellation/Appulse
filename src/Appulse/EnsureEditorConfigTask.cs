@@ -9,13 +9,13 @@ namespace Codestellation.Appulse
 {
     public class EnsureEditorConfigTask : Task
     {
-        public string SolutionDir { get; set; }
+        public string ProjectDir { get; set; }
 
         public string ReferenceEditorConfig { get; set; }
 
         public override bool Execute()
         {
-            if (!VaildateInpute())
+            if (!VaildateInput())
             {
                 return false;
             }
@@ -36,13 +36,13 @@ namespace Codestellation.Appulse
                 return true;
             }
 
-            string details = CompareDetaile(localContent, referenceContent);
+            string details = CompareDetailed(localContent, referenceContent);
 
             Log.LogError($"Reference .editorconfig differs from the local. {details} Update '{localLocation}' from '{ReferenceEditorConfig}')");
             return false;
         }
 
-        private string CompareDetaile(string localContent, string referenceContent)
+        private string CompareDetailed(string localContent, string referenceContent)
         {
             string[] localLines = localContent.Split('\n');
             string[] referenceLines = referenceContent.Split('\n');
@@ -95,7 +95,7 @@ namespace Codestellation.Appulse
 
         private bool TryLoadLocalEditorConfig(out string localContent, out string location)
         {
-            var current = new DirectoryInfo(Patch(SolutionDir));
+            var current = new DirectoryInfo(ProjectDir);
             var searchedPathes = new List<string>();
             do
             {
@@ -117,18 +117,13 @@ namespace Codestellation.Appulse
             return false;
         }
 
-        private string Patch(string solutionDir)
-            // if msbuild runs build of a csproj (not an sln) solution dir ends with *Undefined*.
-            // Remove it to avoid failing during local .editorconfig probing. 
-            => solutionDir.Replace("*Undefined*", string.Empty);
-
         private static string Normalize(string source) => source.Replace("\r", string.Empty);
 
-        private bool VaildateInpute()
+        private bool VaildateInput()
         {
-            if (string.IsNullOrWhiteSpace(SolutionDir))
+            if (string.IsNullOrWhiteSpace(ProjectDir))
             {
-                Log.LogError("Solution dir is empty");
+                Log.LogError("ProjectDir is empty");
                 return false;
             }
 

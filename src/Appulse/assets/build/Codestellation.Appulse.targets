@@ -6,6 +6,6 @@
     <Target
         Name="EnsureEditorConfig"
         BeforeTargets="Compile">
-      <EnsureEditorConfigTask SolutionDir="$(SolutionDir)" ReferenceEditorConfig="$(ReferenceEditorConfig)" />
+      <EnsureEditorConfigTask ProjectDir="$(ProjectDir)" ReferenceEditorConfig="$(ReferenceEditorConfig)" />
     </Target>
 </Project>

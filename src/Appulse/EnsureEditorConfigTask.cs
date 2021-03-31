@@ -15,6 +15,19 @@ namespace Codestellation.Appulse
 
         public override bool Execute()
         {
+            try
+            {
+                return TryExecuteTask();
+            }
+            catch (Exception e)
+            {
+                Log.LogError($"Task failed: ProjectDir='{ProjectDir}'. " + e.Message);
+                throw;
+            }
+        }
+
+        private bool TryExecuteTask()
+        {
             if (!VaildateInput())
             {
                 return false;
@@ -97,25 +110,35 @@ namespace Codestellation.Appulse
         private bool TryLoadLocalEditorConfig(out string localContent, out string location)
         {
             var current = new DirectoryInfo(ProjectDir);
-            var searchedPathes = new List<string>();
-            do
-            {
-                FileInfo editorConfigPath = current.EnumerateFiles(".editorconfig").FirstOrDefault();
-                if (editorConfigPath != null)
-                {
-                    localContent = Normalize(File.ReadAllText(editorConfigPath.FullName));
-                    location = editorConfigPath.FullName;
-                    return true;
-                }
-
-                searchedPathes.Add(current.FullName);
-                current = current.Parent;
-            } while (current != null && Path.IsPathRooted(current.FullName) || current.EnumerateDirectories(".git").Any());
-
-            Log.LogError($"Cannot find .editorconfig. Search path are '{string.Join(", ", searchedPathes)}");
-            localContent = null;
+            var searchPaths = new List<string>();
             location = null;
-            return false;
+            try
+            {
+                do
+                {
+                    FileInfo editorConfigPath = current.EnumerateFiles(".editorconfig").FirstOrDefault();
+                    if (editorConfigPath != null)
+                    {
+                        localContent = Normalize(File.ReadAllText(editorConfigPath.FullName));
+                        location = editorConfigPath.FullName;
+                        return true;
+                    }
+
+                    searchPaths.Add(current.FullName);
+                    current = current.Parent;
+                } while (current != null && Path.IsPathRooted(current.FullName) || current.EnumerateDirectories(".git").Any());
+
+                Log.LogError($"Cannot find .editorconfig. Search path are '{string.Join(", ", searchPaths)}");
+                localContent = null;
+                location = null;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ex.Data["CurrentDir"] = current?.FullName;
+                ex.Data["Location"] = location;
+                throw;
+            }
         }
 
         private static string Normalize(string source) => source.Replace("\r", string.Empty);

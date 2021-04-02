@@ -43,7 +43,8 @@ namespace Codestellation.Appulse.Tests
             {
                 BuildEngine = _engine,
                 ReferenceEditorConfig = new Uri(_sameEditorConfig).AbsoluteUri,
-                ProjectDir = Directory.GetCurrentDirectory()
+                ProjectDir = Directory.GetCurrentDirectory(),
+                EditorConfigAutoUpdate = false
             };
 
             Assert.That(task.Execute(), Is.True);
@@ -66,7 +67,8 @@ namespace Codestellation.Appulse.Tests
             {
                 BuildEngine = _engine,
                 ReferenceEditorConfig = new Uri(_sameEditorConfig).AbsoluteUri,
-                ProjectDir = Directory.GetCurrentDirectory()
+                ProjectDir = Directory.GetCurrentDirectory(),
+                EditorConfigAutoUpdate = false
             };
 
             Assert.That(task.Execute(), Is.True);
@@ -79,7 +81,8 @@ namespace Codestellation.Appulse.Tests
             {
                 BuildEngine = _engine,
                 ReferenceEditorConfig = new Uri(_differentEditorConfig).AbsoluteUri,
-                ProjectDir = Directory.GetCurrentDirectory()
+                ProjectDir = Directory.GetCurrentDirectory(),
+                EditorConfigAutoUpdate = false
             };
 
             Assert.That(task.Execute(), Is.False);
@@ -95,11 +98,31 @@ namespace Codestellation.Appulse.Tests
                 {
                     BuildEngine = _engine,
                     ReferenceEditorConfig = new Uri($"http://localhost:{Resources.Port}").ToString(),
-                    ProjectDir = Directory.GetCurrentDirectory()
+                    ProjectDir = Directory.GetCurrentDirectory(),
+                    EditorConfigAutoUpdate = false
                 };
 
                 Assert.That(task.Execute(), Is.True);
             }
+        }
+
+        [Test]
+        public void Should_auto_update_local_config()
+        {
+            string referenceContent1 = File.ReadAllText(_differentEditorConfig);
+            var task = new EnsureEditorConfigTask
+            {
+                BuildEngine = _engine,
+                ReferenceEditorConfig = new Uri(_differentEditorConfig).AbsoluteUri,
+                ProjectDir = Directory.GetCurrentDirectory(),
+                EditorConfigAutoUpdate = true
+            };
+            Assert.That(task.Execute(), Is.True);
+
+            string localContent = File.ReadAllText(_localEditorConfig);
+            string referenceContent = File.ReadAllText(_differentEditorConfig);
+
+            Assert.That(localContent, Is.EqualTo(referenceContent));
         }
     }
 }

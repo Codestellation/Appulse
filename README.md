@@ -12,7 +12,7 @@ After completing install make sure your project contains such lines:
 
 ```xml
 <ItemGroup>
-    <PackageReference Include="Codestellation.Appulse" Version="0.1.6" PrivateAssets="All" />
+    <PackageReference Include="Codestellation.Appulse" Version="0.2.0" PrivateAssets="All" />
 </ItemGroup>
 ```
 
@@ -35,3 +35,14 @@ or to to a file available throught http/https
 ```
 
 If files have differences build will fail and error message will contains instruction how to fix it.
+
+## Automatic Update To Reference `.editorconfig` 
+
+Starting from version `0.2` Codestellation.Appulse can update local `.editorconfig` automatically and it's on by default. 
+If you want to disable it add the following property to the project file:
+
+```xml
+<PropertyGroup>
+    <EditorConfigAutoUpdate>false</EditorConfigAutoUpdate>
+</PropertyGroup>
+```

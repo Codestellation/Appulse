@@ -13,6 +13,8 @@ namespace Codestellation.Appulse
 
         public string ReferenceEditorConfig { get; set; }
 
+        public bool EditorConfigAutoUpdate { get; set; } = true;
+
         public override bool Execute()
         {
             try
@@ -47,8 +49,10 @@ namespace Codestellation.Appulse
             {
                 return true;
             }
+
+            if (EditorConfigAutoUpdate)
             {
-                Log.LogMessage("Reference .editorconfig is the same as local one.");
+                TryUpdateLocalConfig(referenceContent, localLocation);
                 return true;
             }
 
@@ -56,6 +60,19 @@ namespace Codestellation.Appulse
             Log.LogError($"Reference .editorconfig differs from the local. {details}. " +
                          $"Update '{localLocation}' from '{ReferenceEditorConfig}')");
             return false;
+        }
+
+        private void TryUpdateLocalConfig(string referenceContent, string localLocation)
+        {
+            try
+            {
+                File.WriteAllText(localLocation, referenceContent);
+            }
+            catch (Exception e)
+            {
+                e.Data["location"] = localLocation;
+                throw;
+            }
         }
 
         private bool CompareLineByLine(string localContent, string referenceContent, out string errorMessage)

@@ -3,8 +3,8 @@
     <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
     <Authors>Codestellation Team</Authors>
     <Company>Codestellation</Company>
-    <Description>MS build take to ensure latest `.editorconfig` is used by comparing one that placed in you solution folder and another one which is considered reference.</Description>
-    <Copyright>Copyright (c) Codestellation 2018</Copyright>
+    <Description>MS build take to ensure latest `.editorconfig` is used by comparing one that placed in you solution folder and another one which is considered reference. Automatic update is on by default.</Description>
+    <Copyright>Copyright (c) Codestellation 2020</Copyright>
     <PackageId>Codestellation.Appulse</PackageId>
     <PackageProjectUrl>https://github.com/codestellation/appulse</PackageProjectUrl>
 

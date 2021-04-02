@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,8 +16,9 @@ namespace Codestellation.Appulse.Tests
                 => app.Run(c => c.Response.WriteAsync(EditorConfigContent, Encoding.UTF8));
         }
 
-        public static readonly string EditorConfigContent = @"# http://editorconfig.org
-# it's a stub for testing purposes. Don't add here any values.";
+        public static readonly string EditorConfigContent = "# http://editorconfig.org" +
+                                                            Environment.NewLine +
+                                                            "# it's a stub for testing purposes. Don't add here any values.";
 
         public static IWebHost CreateWebServer() =>
             new WebHostBuilder()

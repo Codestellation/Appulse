@@ -43,27 +43,37 @@ namespace Codestellation.Appulse
                 return false;
             }
 
-            if (string.Equals(localContent, referenceContent, StringComparison.Ordinal))
+            if (CompareLineByLine(localContent, referenceContent, out string details))
+            {
+                return true;
+            }
             {
                 Log.LogMessage("Reference .editorconfig is the same as local one.");
                 return true;
             }
 
-            string details = CompareDetailed(localContent, referenceContent);
 
             Log.LogError($"Reference .editorconfig differs from the local. {details}. " +
                          $"Update '{localLocation}' from '{ReferenceEditorConfig}')");
             return false;
         }
 
-        private string CompareDetailed(string localContent, string referenceContent)
+        private bool CompareLineByLine(string localContent, string referenceContent, out string errorMessage)
         {
-            string[] localLines = localContent.Split('\n');
-            string[] referenceLines = referenceContent.Split('\n');
+            var separators = new[]
+            {
+                "\r\n",
+                "\r",
+                "\n"
+            };
+
+            string[] localLines = localContent.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+            string[] referenceLines = referenceContent.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
             if (localLines.Length != referenceLines.Length)
             {
-                return $"Local has {localLines.Length} lines reference has {referenceLines.Length} lines";
+                errorMessage = $"Local has {localLines.Length} lines reference has {referenceLines.Length} lines";
+                return false;
             }
 
 
@@ -76,10 +86,12 @@ namespace Codestellation.Appulse
                     continue;
                 }
 
-                return $"Difference at line {lineIndex + 1}. Local is '{local}' reference is '{reference}'";
+                errorMessage = $"Difference at line {lineIndex + 1}. Local is '{local}' reference is '{reference}'";
+                return false;
             }
 
-            throw new InvalidOperationException("This should never happen");
+            errorMessage = string.Empty;
+            return true;
         }
 
         private bool TryLoadReferenceEditorConfig(out string referenceContent)
@@ -91,7 +103,7 @@ namespace Codestellation.Appulse
                 WebRequest request = WebRequest.CreateDefault(uri);
                 using (var streamReader = new StreamReader(request.GetResponse().GetResponseStream()))
                 {
-                    referenceContent = Normalize(streamReader.ReadToEnd());
+                    referenceContent = streamReader.ReadToEnd();
                 }
 
                 Log.LogMessage($"Reference .editorconfig was loaded successfully from '{uri}'");
@@ -119,7 +131,7 @@ namespace Codestellation.Appulse
                     FileInfo editorConfigPath = current.EnumerateFiles(".editorconfig").FirstOrDefault();
                     if (editorConfigPath != null)
                     {
-                        localContent = Normalize(File.ReadAllText(editorConfigPath.FullName));
+                        localContent = File.ReadAllText(editorConfigPath.FullName);
                         location = editorConfigPath.FullName;
                         return true;
                     }
@@ -140,8 +152,6 @@ namespace Codestellation.Appulse
                 throw;
             }
         }
-
-        private static string Normalize(string source) => source.Replace("\r", string.Empty);
 
         private bool VaildateInput()
         {

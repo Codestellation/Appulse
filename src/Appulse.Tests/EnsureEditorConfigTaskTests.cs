@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using NUnit.Framework;
 
@@ -14,22 +13,22 @@ namespace Codestellation.Appulse.Tests
         private string _localEditorConfig;
         private string _differentEditorConfig;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Setup()
         {
             _engine = new StubBuildEngine();
 
             _sameEditorConfig = Path.Combine(Directory.GetCurrentDirectory(), ".editorconfig_reference");
-            File.WriteAllText(_sameEditorConfig, Resources.EditorConfigContent, Encoding.UTF8);
+            File.WriteAllText(_sameEditorConfig, Resources.EditorConfigContent);
 
             _differentEditorConfig = Path.Combine(Directory.GetCurrentDirectory(), ".editorconfig_different");
-            File.WriteAllText(_differentEditorConfig, Resources.EditorConfigContent + "Symbols to change", Encoding.UTF8);
+            File.WriteAllText(_differentEditorConfig, Resources.EditorConfigContent + "Symbols to change");
 
             _localEditorConfig = Path.Combine(Directory.GetCurrentDirectory(), ".editorconfig");
-            File.WriteAllText(_localEditorConfig, Resources.EditorConfigContent, Encoding.UTF8);
+            File.WriteAllText(_localEditorConfig, Resources.EditorConfigContent);
         }
 
-        [OneTimeTearDown]
+        [TearDown]
         public void TearDown()
         {
             File.Delete(_localEditorConfig);

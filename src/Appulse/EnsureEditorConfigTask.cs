@@ -155,7 +155,7 @@ namespace Codestellation.Appulse
 
                     searchPaths.Add(current.FullName);
                     current = current.Parent;
-                } while (current != null && Path.IsPathRooted(current.FullName) || current.EnumerateDirectories(".git").Any());
+                } while (current != null && (Path.IsPathRooted(current.FullName) || current.EnumerateDirectories(".git").Any()));
 
                 Log.LogError($"Cannot find .editorconfig. Search path are '{string.Join(", ", searchPaths)}");
                 localContent = null;

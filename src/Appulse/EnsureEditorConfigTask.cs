@@ -30,7 +30,7 @@ namespace Codestellation.Appulse
 
         private bool TryExecuteTask()
         {
-            if (!VaildateInput())
+            if (!ValidateInput())
             {
                 return false;
             }
@@ -170,7 +170,7 @@ namespace Codestellation.Appulse
             }
         }
 
-        private bool VaildateInput()
+        private bool ValidateInput()
         {
             if (string.IsNullOrWhiteSpace(ProjectDir))
             {

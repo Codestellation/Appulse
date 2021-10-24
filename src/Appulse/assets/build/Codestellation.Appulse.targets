@@ -4,8 +4,12 @@
     </PropertyGroup>
 
     <Target
-        Name="EnsureEditorConfig"
-        BeforeTargets="Compile">
-      <EnsureEditorConfigTask ProjectDir="$(ProjectDir)" ReferenceEditorConfig="$(ReferenceEditorConfig)" />
+            Name="EnsureEditorConfig"
+            BeforeTargets="Compile">
+        <EnsureEditorConfigTask
+                ProjectDir="$(ProjectDir)"
+                AppulseReferenceEditorConfig="$(AppulseReferenceEditorConfig)"
+                AppulseLocalEditorConfig="$(AppulseLocalEditorConfig)"
+                AppulseEditorConfigAutoUpdate="$(AppulseEditorConfigAutoUpdate)"/>
     </Target>
 </Project>

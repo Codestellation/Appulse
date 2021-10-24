@@ -42,9 +42,9 @@ namespace Codestellation.Appulse.Tests
             var task = new EnsureEditorConfigTask
             {
                 BuildEngine = _engine,
-                ReferenceEditorConfig = new Uri(_sameEditorConfig).AbsoluteUri,
+                AppulseReferenceEditorConfig = new Uri(_sameEditorConfig).AbsoluteUri,
                 ProjectDir = Directory.GetCurrentDirectory(),
-                EditorConfigAutoUpdate = false
+                AppulseEditorConfigAutoUpdate = false
             };
 
             Assert.That(task.Execute(), Is.True);
@@ -66,9 +66,9 @@ namespace Codestellation.Appulse.Tests
             var task = new EnsureEditorConfigTask
             {
                 BuildEngine = _engine,
-                ReferenceEditorConfig = new Uri(_sameEditorConfig).AbsoluteUri,
+                AppulseReferenceEditorConfig = new Uri(_sameEditorConfig).AbsoluteUri,
                 ProjectDir = Directory.GetCurrentDirectory(),
-                EditorConfigAutoUpdate = false
+                AppulseEditorConfigAutoUpdate = false
             };
 
             Assert.That(task.Execute(), Is.True);
@@ -80,9 +80,9 @@ namespace Codestellation.Appulse.Tests
             var task = new EnsureEditorConfigTask
             {
                 BuildEngine = _engine,
-                ReferenceEditorConfig = new Uri(_differentEditorConfig).AbsoluteUri,
+                AppulseReferenceEditorConfig = new Uri(_differentEditorConfig).AbsoluteUri,
                 ProjectDir = Directory.GetCurrentDirectory(),
-                EditorConfigAutoUpdate = false
+                AppulseEditorConfigAutoUpdate = false
             };
 
             Assert.That(task.Execute(), Is.False);
@@ -97,9 +97,9 @@ namespace Codestellation.Appulse.Tests
                 var task = new EnsureEditorConfigTask
                 {
                     BuildEngine = _engine,
-                    ReferenceEditorConfig = new Uri($"http://localhost:{Resources.Port}").ToString(),
+                    AppulseReferenceEditorConfig = new Uri($"http://localhost:{Resources.Port}").ToString(),
                     ProjectDir = Directory.GetCurrentDirectory(),
-                    EditorConfigAutoUpdate = false
+                    AppulseEditorConfigAutoUpdate = false
                 };
 
                 Assert.That(task.Execute(), Is.True);
@@ -113,9 +113,9 @@ namespace Codestellation.Appulse.Tests
             var task = new EnsureEditorConfigTask
             {
                 BuildEngine = _engine,
-                ReferenceEditorConfig = new Uri(_differentEditorConfig).AbsoluteUri,
+                AppulseReferenceEditorConfig = new Uri(_differentEditorConfig).AbsoluteUri,
                 ProjectDir = Directory.GetCurrentDirectory(),
-                EditorConfigAutoUpdate = true
+                AppulseEditorConfigAutoUpdate = true
             };
             Assert.That(task.Execute(), Is.True);
 

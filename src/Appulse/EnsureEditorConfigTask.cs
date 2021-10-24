@@ -9,16 +9,39 @@ namespace Codestellation.Appulse
 {
     public class EnsureEditorConfigTask : Task
     {
-        public string ProjectDir { get; set; }
+        private readonly AppulseTaskContext _context = new AppulseTaskContext();
+        private MsBuildProperties MsBuildProperties => _context.MsBuildProperties;
+        private TaskState State => _context.TaskState;
 
-        public string ReferenceEditorConfig { get; set; }
+        public string ProjectDir
+        {
+            get => MsBuildProperties.ProjectDir;
+            set => MsBuildProperties.ProjectDir = value;
+        }
 
-        public bool EditorConfigAutoUpdate { get; set; } = true;
+        public string AppulseReferenceEditorConfig
+        {
+            get => MsBuildProperties.AppulseReferenceEditorConfig;
+            set => MsBuildProperties.AppulseReferenceEditorConfig = value;
+        }
+
+        public string AppulseLocalEditorConfig
+        {
+            get => MsBuildProperties.AppulseLocalEditorConfig;
+            set => MsBuildProperties.AppulseLocalEditorConfig = value;
+        }
+
+        public bool AppulseEditorConfigAutoUpdate
+        {
+            get => MsBuildProperties.AppulseEditorConfigAutoUpdate;
+            set => MsBuildProperties.AppulseEditorConfigAutoUpdate = value;
+        }
 
         public override bool Execute()
         {
             try
             {
+                State.ReferenceEditorConfigContent = MsBuildProperties.AppulseReferenceEditorConfig;
                 return TryExecuteTask();
             }
             catch (Exception e)
@@ -35,47 +58,44 @@ namespace Codestellation.Appulse
                 return false;
             }
 
-            if (!TryLoadLocalEditorConfig(out string localContent, out string localLocation))
+            if (!TryLoadReferenceEditorConfig())
             {
                 return false;
             }
 
-            if (!TryLoadReferenceEditorConfig(out string referenceContent))
-            {
-                return false;
-            }
 
-            if (CompareLineByLine(localContent, referenceContent, out string details))
+            if (TryLoadLocalEditorConfig() && CompareLineByLine())
             {
                 return true;
             }
 
-            if (EditorConfigAutoUpdate)
+
+            if (MsBuildProperties.AppulseEditorConfigAutoUpdate)
             {
-                TryUpdateLocalConfig(referenceContent, localLocation);
+                TryUpdateLocalConfig();
                 return true;
             }
 
 
-            Log.LogError($"Reference .editorconfig differs from the local. {details}. " +
-                         $"Update '{localLocation}' from '{ReferenceEditorConfig}')");
+            Log.LogError($"Reference .editorconfig differs from the local. {State.EditorConfigDifferenceDetails}. " +
+                         $"Update '{MsBuildProperties.AppulseLocalEditorConfig}' from '{AppulseReferenceEditorConfig}')");
             return false;
         }
 
-        private void TryUpdateLocalConfig(string referenceContent, string localLocation)
+        private void TryUpdateLocalConfig()
         {
             try
             {
-                File.WriteAllText(localLocation, referenceContent);
+                File.WriteAllText(State.LocalEditorConfig, State.ReferenceEditorConfigContent);
             }
             catch (Exception e)
             {
-                e.Data["location"] = localLocation;
+                e.Data["location"] = AppulseLocalEditorConfig;
                 throw;
             }
         }
 
-        private bool CompareLineByLine(string localContent, string referenceContent, out string errorMessage)
+        private bool CompareLineByLine()
         {
             var separators = new[]
             {
@@ -84,12 +104,12 @@ namespace Codestellation.Appulse
                 "\n"
             };
 
-            string[] localLines = localContent.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-            string[] referenceLines = referenceContent.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+            string[] localLines = State.LocalEditorConfigContent.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+            string[] referenceLines = State.ReferenceEditorConfigContent.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
 
             if (localLines.Length != referenceLines.Length)
             {
-                errorMessage = $"Local has {localLines.Length} lines reference has {referenceLines.Length} lines";
+                State.EditorConfigDifferenceDetails = $"Local has {localLines.Length} lines reference has {referenceLines.Length} lines";
                 return false;
             }
 
@@ -103,24 +123,23 @@ namespace Codestellation.Appulse
                     continue;
                 }
 
-                errorMessage = $"Difference at line {lineIndex + 1}. Local is '{local}' reference is '{reference}'";
+                State.EditorConfigDifferenceDetails = $"Difference at line {lineIndex + 1}. Local is '{local}' reference is '{reference}'";
                 return false;
             }
 
-            errorMessage = string.Empty;
             return true;
         }
 
-        private bool TryLoadReferenceEditorConfig(out string referenceContent)
+        private bool TryLoadReferenceEditorConfig()
         {
             try
             {
-                var uri = new Uri(ReferenceEditorConfig);
+                var uri = new Uri(AppulseReferenceEditorConfig);
                 //It can handle file scheme also
-                WebRequest request = WebRequest.CreateDefault(uri);
+                var request = WebRequest.CreateDefault(uri);
                 using (var streamReader = new StreamReader(request.GetResponse().GetResponseStream()))
                 {
-                    referenceContent = streamReader.ReadToEnd();
+                    State.ReferenceEditorConfigContent = streamReader.ReadToEnd();
                 }
 
                 Log.LogMessage($"Reference .editorconfig was loaded successfully from '{uri}'");
@@ -130,17 +149,15 @@ namespace Codestellation.Appulse
             catch (WebException e)
             {
                 Log.LogError($"Cannot load reference .editorconfig: {e.Message}");
-                referenceContent = null;
                 return false;
             }
         }
 
 
-        private bool TryLoadLocalEditorConfig(out string localContent, out string location)
+        private bool TryLoadLocalEditorConfig()
         {
             var current = new DirectoryInfo(ProjectDir);
             var searchPaths = new List<string>();
-            location = null;
             try
             {
                 do
@@ -148,8 +165,8 @@ namespace Codestellation.Appulse
                     FileInfo editorConfigPath = current.EnumerateFiles(".editorconfig").FirstOrDefault();
                     if (editorConfigPath != null)
                     {
-                        localContent = File.ReadAllText(editorConfigPath.FullName);
-                        location = editorConfigPath.FullName;
+                        State.LocalEditorConfig = editorConfigPath.FullName;
+                        State.LocalEditorConfigContent = File.ReadAllText(editorConfigPath.FullName);
                         return true;
                     }
 
@@ -158,14 +175,12 @@ namespace Codestellation.Appulse
                 } while (current != null && (Path.IsPathRooted(current.FullName) || current.EnumerateDirectories(".git").Any()));
 
                 Log.LogError($"Cannot find .editorconfig. Search path are '{string.Join(", ", searchPaths)}");
-                localContent = null;
-                location = null;
                 return false;
             }
             catch (Exception ex)
             {
                 ex.Data["CurrentDir"] = current?.FullName;
-                ex.Data["Location"] = location;
+                ex.Data["Location"] = MsBuildProperties.AppulseLocalEditorConfig;
                 throw;
             }
         }
@@ -178,26 +193,26 @@ namespace Codestellation.Appulse
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(ReferenceEditorConfig))
+            if (string.IsNullOrWhiteSpace(AppulseReferenceEditorConfig))
             {
-                Log.LogError($"{nameof(ReferenceEditorConfig)} is not set. " +
-                             $"Please set property {nameof(ReferenceEditorConfig)} to point to a file or web link with the source .editorconfig file. " +
+                Log.LogError($"{nameof(AppulseReferenceEditorConfig)} is not set. " +
+                             $"Please set property {nameof(AppulseReferenceEditorConfig)} to point to a file or web link with the source .editorconfig file. " +
                              "Supported schemes are file:// and http://");
                 return false;
             }
 
-            if (!Uri.IsWellFormedUriString(ReferenceEditorConfig, UriKind.RelativeOrAbsolute))
+            if (!Uri.IsWellFormedUriString(AppulseReferenceEditorConfig, UriKind.RelativeOrAbsolute))
             {
-                Log.LogError($"Expected {nameof(ReferenceEditorConfig)} to be a well formed URI with path or http(s) scheme but found '{ReferenceEditorConfig}'");
+                Log.LogError($"Expected {nameof(AppulseReferenceEditorConfig)} to be a well formed URI with path or http(s) scheme but found '{AppulseReferenceEditorConfig}'");
                 return false;
             }
 
-            var uri = new Uri(ReferenceEditorConfig);
+            var uri = new Uri(AppulseReferenceEditorConfig);
             if (!(string.Equals(uri.Scheme, "file", StringComparison.OrdinalIgnoreCase)
                   || string.Equals(uri.Scheme, "http", StringComparison.OrdinalIgnoreCase)
                   || string.Equals(uri.Scheme, "https", StringComparison.OrdinalIgnoreCase)))
             {
-                Log.LogError($"Expected {nameof(ReferenceEditorConfig)} to be a well formed URI with path or http(s) scheme but found '{ReferenceEditorConfig}'");
+                Log.LogError($"Expected {nameof(AppulseReferenceEditorConfig)} to be a well formed URI with path or http(s) scheme but found '{AppulseReferenceEditorConfig}'");
                 return false;
             }
 

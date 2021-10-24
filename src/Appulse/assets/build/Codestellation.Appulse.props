@@ -1,11 +1,11 @@
 <Project>
-  <PropertyGroup>
-    <EnsureEditorConfigTaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.0</EnsureEditorConfigTaskFolder>
-    <EnsureEditorConfigTaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net46</EnsureEditorConfigTaskFolder>
-    <EnsureEditorConfigTaskAssembly>$(EnsureEditorConfigTaskFolder)\Codestellation.Appulse.dll</EnsureEditorConfigTaskAssembly>
-  </PropertyGroup>
+    <PropertyGroup>
+        <EnsureEditorConfigTaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.0</EnsureEditorConfigTaskFolder>
+        <EnsureEditorConfigTaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net46</EnsureEditorConfigTaskFolder>
+        <EnsureEditorConfigTaskAssembly>$(EnsureEditorConfigTaskFolder)\Codestellation.Appulse.dll</EnsureEditorConfigTaskAssembly>
+    </PropertyGroup>
 
-  <UsingTask 
-      TaskName="Codestellation.Appulse.EnsureEditorConfigTask"
-      AssemblyFile="$(EnsureEditorConfigTaskAssembly)" />
+    <UsingTask
+            TaskName="Codestellation.Appulse.EnsureEditorConfigTask"
+            AssemblyFile="$(EnsureEditorConfigTaskAssembly)"/>
 </Project>

@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Microsoft.Build.Framework;
 
 namespace Codestellation.Appulse.Tests
 {
     public class StubBuildEngine : IBuildEngine
     {
-        public void LogErrorEvent(BuildErrorEventArgs e) => Console.WriteLine(e.Message);
+        private readonly List<string> _errors = new List<string>();
+        public IReadOnlyCollection<string> Errors => _errors;
+        public void LogErrorEvent(BuildErrorEventArgs e) => _errors.Add(e.Message);
 
         public void LogWarningEvent(BuildWarningEventArgs e) => Console.WriteLine(e.Message);
 

@@ -109,7 +109,6 @@ namespace Codestellation.Appulse.Tests
         [Test]
         public void Should_auto_update_local_config()
         {
-            string referenceContent1 = File.ReadAllText(_differentEditorConfig);
             var task = new EnsureEditorConfigTask
             {
                 BuildEngine = _engine,
@@ -117,7 +116,8 @@ namespace Codestellation.Appulse.Tests
                 ProjectDir = Directory.GetCurrentDirectory(),
                 AppulseEditorConfigAutoUpdate = true
             };
-            Assert.That(task.Execute(), Is.True);
+
+            Assert.That(task.Execute(), Is.True, string.Join(Environment.NewLine, _engine.Errors));
 
             string localContent = File.ReadAllText(_localEditorConfig);
             string referenceContent = File.ReadAllText(_differentEditorConfig);

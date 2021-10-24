@@ -42,7 +42,9 @@ namespace Codestellation.Appulse.Pipeline
 
                 log.LogWarning(
                     $"Local.editorconfig was not found. Search path are '{string.Join(", ", searchPaths)}. Reference .editorconfig will be placed to '{state.SolutionDir}'.");
+
                 state.LocalEditorConfig = Path.Combine(state.SolutionDir, ".editorconfig");
+                state.LocalEditorConfigContent = string.Empty;
                 return true;
             }
             catch (Exception ex)

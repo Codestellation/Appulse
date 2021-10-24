@@ -8,5 +8,4 @@
         string AppulseLocalEditorConfig { get; }
         bool AppulseEditorConfigAutoUpdate { get; }
     }
-
 }

@@ -21,7 +21,7 @@ namespace Codestellation.Appulse.Pipeline
             if (localLines.Length != referenceLines.Length)
             {
                 state.EditorConfigDifferenceDetails = $"Local has {localLines.Length} lines reference has {referenceLines.Length} lines";
-                return false;
+                return properties.AppulseEditorConfigAutoUpdate;
             }
 
             for (var lineIndex = 0; lineIndex < localLines.Length; lineIndex++)

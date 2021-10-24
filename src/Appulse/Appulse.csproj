@@ -4,7 +4,7 @@
     <Authors>Codestellation Team</Authors>
     <Company>Codestellation</Company>
     <Description>MS build take to ensure latest `.editorconfig` is used by comparing one that placed in you solution folder and another one which is considered reference. Automatic update is on by default.</Description>
-    <Copyright>Copyright (c) Codestellation 2020</Copyright>
+    <Copyright>Copyright (c) Codestellation 2021</Copyright>
     <PackageId>Codestellation.Appulse</PackageId>
     <PackageProjectUrl>https://github.com/codestellation/appulse</PackageProjectUrl>
 

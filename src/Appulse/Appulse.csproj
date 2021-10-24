@@ -7,7 +7,7 @@
     <Copyright>Copyright (c) Codestellation 2021</Copyright>
     <PackageId>Codestellation.Appulse</PackageId>
     <PackageProjectUrl>https://github.com/codestellation/appulse</PackageProjectUrl>
-
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <DevelopmentDependency>true</DevelopmentDependency>
     <RepositoryUrl>https://github.com/codestellation/appulse</RepositoryUrl>
     <AssemblyName>Codestellation.Appulse</AssemblyName>
@@ -30,6 +30,7 @@
   <ItemGroup>
     <Content Include="assets\**" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath=""/>
+    <None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   <ItemGroup>

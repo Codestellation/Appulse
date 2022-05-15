@@ -8,6 +8,26 @@ namespace Codestellation.Appulse.Pipeline
     {
         public bool Process(IMsBuildProperties properties, TaskContext state, TaskLoggingHelper log)
         {
+            if (!TryFindDifference(state, out string difference))
+            {
+                return true;
+            }
+
+            state.EditorConfigDifferenceDetails = difference;
+
+            if (properties.AppulseEditorConfigAutoUpdate)
+            {
+                return true;
+            }
+
+            log.LogError($"Reference .editorconfig differs from the local. {state.EditorConfigDifferenceDetails}. " +
+                         $"Update '{state.LocalEditorConfig}' from '{properties.AppulseReferenceEditorConfig}')");
+
+            return false;
+        }
+
+        private static bool TryFindDifference(TaskContext state, out string difference)
+        {
             var separators = new[]
             {
                 "\r\n",
@@ -20,8 +40,8 @@ namespace Codestellation.Appulse.Pipeline
 
             if (localLines.Length != referenceLines.Length)
             {
-                state.EditorConfigDifferenceDetails = $"Local has {localLines.Length} lines reference has {referenceLines.Length} lines";
-                return properties.AppulseEditorConfigAutoUpdate;
+                difference = $"Local has {localLines.Length} lines reference has {referenceLines.Length} lines";
+                return true;
             }
 
             for (var lineIndex = 0; lineIndex < localLines.Length; lineIndex++)
@@ -33,15 +53,12 @@ namespace Codestellation.Appulse.Pipeline
                     continue;
                 }
 
-                state.EditorConfigDifferenceDetails = $"Difference at line {lineIndex + 1}. Local is '{local}' reference is '{reference}'";
-                //Won't fail task if auto update is set
-                return properties.AppulseEditorConfigAutoUpdate;
+                difference = $"Difference at line {lineIndex + 1}. Local is '{local}' reference is '{reference}'";
+                return true;
             }
 
-            log.LogError($"Reference .editorconfig differs from the local. {state.EditorConfigDifferenceDetails}. " +
-                         $"Update '{state.LocalEditorConfig}' from '{properties.AppulseReferenceEditorConfig}')");
-
-            return true;
+            difference = null;
+            return false;
         }
     }
 }

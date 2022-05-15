@@ -8,12 +8,14 @@ namespace Codestellation.Appulse.Pipeline
     {
         public bool Process(IMsBuildProperties properties, TaskContext state, TaskLoggingHelper log)
         {
-            if (string.IsNullOrWhiteSpace(state.EditorConfigDifferenceDetails))
+            bool filesAreEqual = string.IsNullOrWhiteSpace(state.EditorConfigDifferenceDetails);
+            if (filesAreEqual)
             {
                 return true;
             }
 
-            if (!properties.AppulseEditorConfigAutoUpdate)
+            bool updateForbidden = !properties.AppulseEditorConfigAutoUpdate;
+            if (updateForbidden)
             {
                 return true;
             }

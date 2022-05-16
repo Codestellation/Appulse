@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Codestellation.Appulse.Pipeline;
-using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 namespace Codestellation.Appulse
@@ -14,7 +13,6 @@ namespace Codestellation.Appulse
 
         public string SolutionDir { get; set; }
 
-        [Required]
         public string AppulseReferenceEditorConfig { get; set; }
 
         public string AppulseLocalEditorConfig { get; set; }

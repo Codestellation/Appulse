@@ -13,6 +13,7 @@ namespace Codestellation.Appulse.Tests
         private string _localEditorConfig;
         private string _differentEditorConfig;
         private string _solutionDir;
+        private string _projectDir;
 
 
         [OneTimeSetUp]
@@ -25,7 +26,14 @@ namespace Codestellation.Appulse.Tests
 
             _solutionDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("D"));
             Directory.CreateDirectory(_solutionDir);
+            
+            _projectDir = Path.Combine(_solutionDir, "Project");
+            Directory.CreateDirectory(_projectDir);
+            
             _localEditorConfig = Path.Combine(_solutionDir, ".editorconfig");
+            
+            File.WriteAllText(Path.Combine(_solutionDir, "solution.sln"), "Some Letters");
+            
         }
 
         [SetUp]
@@ -137,6 +145,29 @@ namespace Codestellation.Appulse.Tests
                 AppulseReferenceEditorConfig = new Uri(_differentEditorConfig).AbsoluteUri,
                 ProjectDir = _solutionDir,
                 SolutionDir = _solutionDir,
+                AppulseEditorConfigAutoUpdate = true
+            };
+
+            Assert.That(task.Execute(), Is.True, string.Join(Environment.NewLine, _engine.Errors));
+            FileAssert.Exists(_localEditorConfig);
+
+            string localContent = File.ReadAllText(_localEditorConfig);
+            string referenceContent = File.ReadAllText(_differentEditorConfig);
+
+            Assert.That(localContent, Is.EqualTo(referenceContent));
+        }
+        
+        [Test]
+        public void Should_download_config_to_solution_folder_if_solution_dir_is_not_provided_by_msbuild()
+        {
+            File.Delete(_localEditorConfig);
+
+            var task = new EnsureEditorConfigTask
+            {
+                BuildEngine = _engine,
+                AppulseReferenceEditorConfig = new Uri(_differentEditorConfig).AbsoluteUri,
+                ProjectDir = _projectDir,
+                SolutionDir = null,
                 AppulseEditorConfigAutoUpdate = true
             };
 

@@ -22,13 +22,18 @@ namespace Codestellation.Appulse.Pipeline
                         state.LocalEditorConfig = editorConfigPath.FullName;
                         state.LocalEditorConfigContent = File.ReadAllText(editorConfigPath.FullName);
 
-                        if (current.EnumerateFiles("*.sln").Any())
+                        return true;
+                    }
+                    
+                    if (string.IsNullOrWhiteSpace(state.SolutionDir))
+                    {
+                        var solutionFiles = current.EnumerateFiles("*.sln").ToList();
+                        if (solutionFiles.Any())
                         {
                             state.SolutionDir = current.FullName;
                         }
-
-                        return true;
                     }
+                    
 
                     searchPaths.Add(current.FullName);
                     current = current.Parent;

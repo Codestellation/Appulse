@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Codestellation.Appulse.Pipeline;
 using Microsoft.Build.Utilities;
 
@@ -51,17 +52,7 @@ namespace Codestellation.Appulse
             }
         }
 
-        private bool ExecutePipeline()
-        {
-            foreach (IPipelineElement element in _pipeline)
-            {
-                if (!element.Process(this, _context, Log))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
+        private bool ExecutePipeline() => 
+            _pipeline.All(element => element.Process(this, _context, Log));
     }
 }

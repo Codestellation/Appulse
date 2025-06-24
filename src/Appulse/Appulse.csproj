@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net481</TargetFrameworks>
     <Authors>Codestellation Team</Authors>
     <Company>Codestellation</Company>
     <Description>MS build take to ensure latest `.editorconfig` is used by comparing one that placed in you solution folder and another one which is considered reference. Automatic update is on by default.</Description>
@@ -39,7 +39,7 @@
       Otherwise, these will be added to your package’s list of dependencies.
       These packages are not required when your task is installed; they are only used when you compile your project. (https://www.natemcmaster.com/blog/2017/07/05/msbuild-task-in-nuget/)
     -->
-    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.85" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.6.85" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.14.8" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.8" PrivateAssets="All" />
   </ItemGroup>
 </Project>

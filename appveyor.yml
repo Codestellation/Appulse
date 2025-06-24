@@ -4,6 +4,8 @@ branches:
   only:
     - master
 
+build: off
+
 # build config
 build_script:
   - .\build.sh

@@ -39,7 +39,7 @@
       Otherwise, these will be added to your package’s list of dependencies.
       These packages are not required when your task is installed; they are only used when you compile your project. (https://www.natemcmaster.com/blog/2017/07/05/msbuild-task-in-nuget/)
     -->
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.14.8" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.8" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.14.28" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.28" PrivateAssets="All" />
   </ItemGroup>
 </Project>
